@@ -3,7 +3,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 axios.defaults.baseURL = 'https://taskpro-backend-yofv.onrender.com/';
-
+axios.defaults.withCredentials = true;
 const setAuthHeader = (token) => {
     axios.defaults.headers.common.Authorization = `Bearer ${token}`;
 }
@@ -14,8 +14,9 @@ const clearAuthHeader = () => {
 export const register = createAsyncThunk('auth/register', async (credentials, thunkAPI) => {
     try {
         const { data: res } = await axios.post('auth/register', credentials);
-        if (res.data.accessToken) setAuthHeader(res.data.accessToken);
-        return res.data;
+        const payload = res.data; // { user, accessToken }
+        if (payload?.accessToken) setAuthHeader(payload.accessToken);
+        return payload;
     } catch (error) {
         return thunkAPI.rejectWithValue({
             status: error?.response?.status || null,
@@ -28,9 +29,10 @@ export const login = createAsyncThunk(
     'auth/login',
     async (credentials, thunkAPI) => {
         try {
-            const { data: res } = await axios.post('/auth/login', credentials); // Buraya end point gelicek
-            if (res.data.accessToken) setAuthHeader(res.data.accessToken);
-            return res.data;
+            const { data: res } = await axios.post('auth/login', credentials); 
+            const payload = res.data; // { user, accessToken }
+            if (payload?.accessToken) setAuthHeader(payload.accessToken);
+            return payload;
         } catch (error) {
             return thunkAPI.rejectWithValue({
                 status: error?.response?.status || null,
@@ -42,9 +44,9 @@ export const login = createAsyncThunk(
 
 export const logout = createAsyncThunk(
     'auth/logout',
-    async (__dirname, thunkAPI) => {
+    async (_, thunkAPI) => {
         try {
-            await axios.post('/auth/logout'); // Buraya end point gelicek
+            await axios.post('auth/logout'); 
             clearAuthHeader();
         } catch (error) {
             return thunkAPI.rejectWithValue({
@@ -57,9 +59,9 @@ export const logout = createAsyncThunk(
 
 export const logoutOthers = createAsyncThunk(
     'auth/logoutOthers',
-    async (__dirname, thunkAPI) => {
+    async (_, thunkAPI) => {
         try {
-            await axios.post('/auth/logout-others'); // Buraya end point gelicek
+            await axios.post('auth/logout-others');
             clearAuthHeader();
         } catch (error) {
             return thunkAPI.rejectWithValue({
@@ -76,14 +78,21 @@ export const refreshUser = createAsyncThunk(
         const token = thunkAPI.getState().auth.token;
 
         if (token === null) {
-            return thunkAPI.rejectWithValue('No token found');
+            return thunkAPI.rejectWithValue({ status: 401, message: 'No token found'});
         }
 
+        setAuthHeader(token);
+
         try {
-            const { data: res } = await axios.get('/auth/refresh');
-            return res.data;
+            const { data: res } = await axios.post('auth/refresh');
+            const payload = res.data; // { accessToken }
+            if (payload?.accessToken) setAuthHeader(payload.accessToken);
+            return payload;
         } catch (error) {
-            return thunkAPI.rejectWithValue(error.message);
+            return thunkAPI.rejectWithValue({
+                status: error?.response?.status || null,
+                message: error?.message ? String(error.message) : String(error),
+            });
         }
     },
 );
