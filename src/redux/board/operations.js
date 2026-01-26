@@ -1,3 +1,4 @@
+//src/redux/board/operations.js
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -11,8 +12,58 @@ export const fetchBoard = createAsyncThunk(
         } catch (error) {
             return thunkAPI.rejectWithValue({
                 status: error?.response?.status || null,
-                message: error?.message ? String(error.message) : String(error),
+                message: error?.response?.data?.message
             });
         }
     }
 );
+
+export const addBoard = createAsyncThunk(
+    "board/addBoard",
+    async (boardSchema, thunkAPI) => {
+        try {
+            const { data: res } = await axios.post("board", boardSchema);
+            return res.data;
+        } catch (error) {
+            return thunkAPI.rejectWithValue({
+                status: error?.response?.status || null,
+                message: error?.response?.data?.message 
+            });
+        }
+    }
+);
+
+export const deleteBoard = createAsyncThunk(
+    "board/deleteBoard",
+    async (boardId, thunkAPI) => {
+        try {
+            const { data: res } = await axios.delete(`board/${boardId}`);
+            return res.data;
+        } catch (error) {
+            return thunkAPI.rejectWithValue({
+                status: error?.response?.status || null,
+                message: error?.response?.data?.message
+            });
+        }
+    }
+);  
+
+// export const updateBoard = createAsyncThunk(
+//     "board/updateBoard",
+//     async ({ boardId, updatedBoard }, thunkAPI) => {
+//         try {
+//             const { data: res } = await axios.patch(
+//                 `board/${boardId}`,
+//                 updatedBoard
+//             );
+//             return res.data;
+//         } catch (error) {
+//             return thunkAPI.rejectWithValue({
+//                 status: error?.response?.status || null,
+//                 message: error?.response?.data?.message
+//             });
+//         }
+//     }
+// );  
+
+

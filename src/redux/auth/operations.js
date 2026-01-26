@@ -20,7 +20,7 @@ export const register = createAsyncThunk('auth/register', async (credentials, th
     } catch (error) {
         return thunkAPI.rejectWithValue({
             status: error?.response?.status || null,
-            message: error?.message ? String(error.message) : String(error),
+            message: error?.response?.data?.message
         });
     }
 });
@@ -36,7 +36,7 @@ export const login = createAsyncThunk(
         } catch (error) {
             return thunkAPI.rejectWithValue({
                 status: error?.response?.status || null,
-                message: error?.message ? String(error.message) : String(error),
+                message: error?.response?.data?.message
             });
         }
     },
@@ -51,7 +51,7 @@ export const logout = createAsyncThunk(
         } catch (error) {
             return thunkAPI.rejectWithValue({
                 status: error?.response?.status || null,
-                message: error?.message ? String(error.message) : String(error),
+                message: error?.response?.data?.message
             });
         }
     },
@@ -66,7 +66,7 @@ export const logoutOthers = createAsyncThunk(
         } catch (error) {
             return thunkAPI.rejectWithValue({
                 status: error?.response?.status || null,
-                message: error?.message ? String(error.message) : String(error),
+                message: error?.response?.data?.message
             });
         }
     },
@@ -80,9 +80,7 @@ export const refreshUser = createAsyncThunk(
         if (token === null) {
             return thunkAPI.rejectWithValue({ status: 401, message: 'No token found'});
         }
-
         setAuthHeader(token);
-
         try {
             const { data: res } = await axios.post('auth/refresh');
             const payload = res.data; // { accessToken }
@@ -91,7 +89,7 @@ export const refreshUser = createAsyncThunk(
         } catch (error) {
             return thunkAPI.rejectWithValue({
                 status: error?.response?.status || null,
-                message: error?.message ? String(error.message) : String(error),
+                message: error?.response?.data?.message
             });
         }
     },
