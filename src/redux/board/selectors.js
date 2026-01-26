@@ -1,0 +1,1 @@
+export const selectBoardItems = (state) => state.board.items;
