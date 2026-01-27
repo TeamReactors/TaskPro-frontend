@@ -18,10 +18,7 @@ export const register = createAsyncThunk('auth/register', async (credentials, th
         if (payload?.accessToken) setAuthHeader(payload.accessToken);
         return payload;
     } catch (error) {
-        return thunkAPI.rejectWithValue({
-            status: error?.response?.status || null,
-            message: error?.message ? String(error.message) : String(error),
-        });
+        return thunkAPI.rejectWithValue(error.message);
     }
 });
 
@@ -34,10 +31,7 @@ export const login = createAsyncThunk(
             if (payload?.accessToken) setAuthHeader(payload.accessToken);
             return payload;
         } catch (error) {
-            return thunkAPI.rejectWithValue({
-                status: error?.response?.status || null,
-                message: error?.message ? String(error.message) : String(error),
-            });
+            return thunkAPI.rejectWithValue(error.message);
         }
     },
 );
@@ -49,10 +43,7 @@ export const logout = createAsyncThunk(
             await axios.post('auth/logout'); 
             clearAuthHeader();
         } catch (error) {
-            return thunkAPI.rejectWithValue({
-                status: error?.response?.status || null,
-                message: error?.message ? String(error.message) : String(error),
-            });
+            return thunkAPI.rejectWithValue(error.message);
         }
     },
 );
@@ -64,10 +55,7 @@ export const logoutOthers = createAsyncThunk(
             await axios.post('auth/logout-others');
             clearAuthHeader();
         } catch (error) {
-            return thunkAPI.rejectWithValue({
-                status: error?.response?.status || null,
-                message: error?.message ? String(error.message) : String(error),
-            });
+            return thunkAPI.rejectWithValue(error.message);
         }
     },
 );
@@ -80,19 +68,14 @@ export const refreshUser = createAsyncThunk(
         if (token === null) {
             return thunkAPI.rejectWithValue({ status: 401, message: 'No token found'});
         }
-
         setAuthHeader(token);
-
         try {
             const { data: res } = await axios.post('auth/refresh');
             const payload = res.data; // { accessToken }
             if (payload?.accessToken) setAuthHeader(payload.accessToken);
             return payload;
         } catch (error) {
-            return thunkAPI.rejectWithValue({
-                status: error?.response?.status || null,
-                message: error?.message ? String(error.message) : String(error),
-            });
+            return thunkAPI.rejectWithValue(error.message);
         }
     },
 );
