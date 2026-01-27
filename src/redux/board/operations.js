@@ -10,10 +10,7 @@ export const fetchBoard = createAsyncThunk(
             const { data: res } = await axios.get("board");
             return res.data;
         } catch (error) {
-            return thunkAPI.rejectWithValue({
-                status: error?.response?.status || null,
-                message: error?.response?.data?.message
-            });
+            return thunkAPI.rejectWithValue(error.message);
         }
     }
 );
@@ -25,10 +22,7 @@ export const addBoard = createAsyncThunk(
             const { data: res } = await axios.post("board", boardSchema);
             return res.data;
         } catch (error) {
-            return thunkAPI.rejectWithValue({
-                status: error?.response?.status || null,
-                message: error?.response?.data?.message 
-            });
+            return thunkAPI.rejectWithValue(error.message);
         }
     }
 );
@@ -40,10 +34,7 @@ export const deleteBoard = createAsyncThunk(
             const { data: res } = await axios.delete(`board/${boardId}`);
             return res.data;
         } catch (error) {
-            return thunkAPI.rejectWithValue({
-                status: error?.response?.status || null,
-                message: error?.response?.data?.message
-            });
+            return thunkAPI.rejectWithValue(error.message);
         }
     }
 );  
@@ -58,10 +49,7 @@ export const deleteBoard = createAsyncThunk(
 //             );
 //             return res.data;
 //         } catch (error) {
-//             return thunkAPI.rejectWithValue({
-//                 status: error?.response?.status || null,
-//                 message: error?.response?.data?.message
-//             });
+//            return thunkAPI.rejectWithValue(error.message);
 //         }
 //     }
 // );  

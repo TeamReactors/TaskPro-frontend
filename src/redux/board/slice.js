@@ -4,7 +4,6 @@ import { addBoard, deleteBoard, fetchBoard } from "./operations";
 
 const initialState = {
     items: [],
-    error: null,
 }
 const boardSlice = createSlice({
     name: "board",
