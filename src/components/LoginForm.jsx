@@ -2,9 +2,19 @@ import { Formik, Field, Form } from "formik";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
 
+import { useDispatch } from "react-redux";
+import { login } from '../redux/auth/operations.js'
+
 const LoginForm = () => {
+
+  const dispatch = useDispatch();
+
   const handleSubmit = (values, actions) => {
-    actions.resetForm();
+    // actions.resetForm();
+
+    // @murselsen
+    dispatch(login(values));
+
   };
 
   const LoginSchema = Yup.object().shape({
