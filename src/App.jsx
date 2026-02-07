@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import RestrictedRoute from "./components/RestrictedRoute";
 
 const AuthPage = lazy(() => import("./pages/AuthPage"));
@@ -10,9 +11,8 @@ function App() {
     <>
       <Suspense>
         <Routes>
-          <Route path="/welcome" element={<WelcomePage/>} />
-          
-          
+          <Route path="/welcome" element={<WelcomePage />} />
+
           {/* <Route
             path="/login"
             element={
@@ -31,6 +31,7 @@ function App() {
           <Route path="/auth/:id" element={<AuthPage />} />
         </Routes>
       </Suspense>
+      <Toaster position="top-right" reverseOrder={false} />
     </>
   );
 }
