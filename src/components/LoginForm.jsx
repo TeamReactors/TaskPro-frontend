@@ -2,9 +2,8 @@ import { Formik, Field, Form } from "formik";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
 
-const LoginPage = () => {
+const LoginForm = () => {
   const handleSubmit = (values, actions) => {
-
     actions.resetForm();
   };
 
@@ -12,7 +11,6 @@ const LoginPage = () => {
     email: Yup.string().email("Invalid email").required("Required"),
     password: Yup.string().required("Required"),
   });
-
   return (
     <>
       <Formik
@@ -24,7 +22,7 @@ const LoginPage = () => {
         onSubmit={handleSubmit}
       >
         <Form className="flex flex-col bg-[#151515] w-[35%] m-auto p-[40px] space-y-5  rounded-lg relative top-40">
-          <Link className="text-white" to="/register">
+          <Link className="text-white" to="/auth/register">
             Registration
           </Link>
           <h6 className="text-white text-lg">Log In</h6>
@@ -53,4 +51,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default LoginForm;
