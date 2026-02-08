@@ -1,25 +1,34 @@
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+// Icons
 import { CiFilter } from "react-icons/ci";
 import { IoAddOutline } from "react-icons/io5";
 
-import { useState } from "react";
-
+// Components
 import BoardColumn from './BoardColumn';
 
-// Test Data
-import { columns, tasks } from "../data/testData.js";
+// Reducer Operations
+import { fetchColumns } from '../redux/column/operations';
+import { fetchTask } from '../redux/task/operations';
+// Reducer Selectors
+import { selectColumn } from '../redux/column/selectors';
+
+
 const ScreensPage = ({
     board
 }) => {
-    const boardColumns = columns.filter(column => column.board_id === Number(board));
-    const boardColumnsWithTasks = boardColumns.map(column => {
-        const columnTasks = tasks.filter(task => task.column_id === column.id);
-        return {
-            column,
-            tasks: columnTasks
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (board) {
+            dispatch(fetchColumns(board));
+            dispatch(fetchTask({ board_id: board }));
         }
-    });
-    console.log(boardColumns)
-    console.log(boardColumnsWithTasks)
+    }, [dispatch, board]);
+
+    const columns = useSelector(selectColumn);
+    console.log(columns);
     return <div className="flex-auto overflow-auto  border-solid  p-6 pt-2.5 bg-black text-white">
         <div id="headerDasboard" className="flex justify-between items-center mb-2.5">
             <h2 className="font-medium text-white text-xl font-sans">Project Office  | {board}</h2>
@@ -36,7 +45,11 @@ const ScreensPage = ({
                     <span className="text-xs text-white"> Add another column </span>
                 </div>
                 {
-
+                    columns.map((column) => (
+                        <BoardColumn key={column.id} data={{
+                            column
+                        }} />
+                    ))
                 }
 
 
