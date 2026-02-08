@@ -1,0 +1,1 @@
+export const selectColumn = (state) => state.column.items;
