@@ -1,7 +1,7 @@
 
-import Sidebar from "../components/UI/Sidebar";
+import Sidebar from "../components/Sidebar";
 import ScreensPage
-    from "../components/UI/ScreensPage";
+    from "../components/ScreensPage";
 const HomePage = () => {
     return (
         <div className="flex h-[100vh] flex-col border-2 border-solid border-gray-300">
