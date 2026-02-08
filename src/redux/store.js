@@ -1,6 +1,11 @@
 // src/redux/store.js
 import { configureStore } from '@reduxjs/toolkit';
+// Reducers
 import authReducer from './auth/slice';
+import boardReducer from './board/slice';
+import columnReducer from './column/slice';
+import taskReducer from './task/slice';
+
 import {
     persistStore, persistReducer, FLUSH,
     REHYDRATE,
@@ -18,7 +23,10 @@ const authPersistConfig = {
 }
 export const store = configureStore({
     reducer: {
-        auth: persistReducer(authPersistConfig, authReducer)
+        auth: persistReducer(authPersistConfig, authReducer),
+        board: boardReducer,
+        column: columnReducer,
+        tasks: taskReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
