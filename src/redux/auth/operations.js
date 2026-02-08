@@ -1,6 +1,7 @@
 // auth operations
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 axios.defaults.baseURL = 'https://taskpro-backend-yofv.onrender.com/';
 axios.defaults.withCredentials = true;
@@ -13,11 +14,14 @@ const clearAuthHeader = () => {
 
 export const register = createAsyncThunk('auth/register', async (credentials, thunkAPI) => {
     try {
+        toast.loading("Registering...", { id: "register" });
         const { data: res } = await axios.post('auth/register', credentials);
         const payload = res.data; // { user, accessToken }
         if (payload?.accessToken) setAuthHeader(payload.accessToken);
+        toast.dismiss("register");
         return payload;
     } catch (error) {
+        toast.dismiss("register");
         return thunkAPI.rejectWithValue(error.message);
     }
 });
@@ -26,11 +30,14 @@ export const login = createAsyncThunk(
     'auth/login',
     async (credentials, thunkAPI) => {
         try {
-            const { data: res } = await axios.post('auth/login', credentials); 
+            toast.loading("Logging in...", { id: "login" });
+            const { data: res } = await axios.post('auth/login', credentials);
             const payload = res.data; // { user, accessToken }
             if (payload?.accessToken) setAuthHeader(payload.accessToken);
+            toast.dismiss("login");
             return payload;
         } catch (error) {
+            toast.dismiss("login");
             return thunkAPI.rejectWithValue(error.message);
         }
     },
@@ -40,7 +47,7 @@ export const logout = createAsyncThunk(
     'auth/logout',
     async (_, thunkAPI) => {
         try {
-            await axios.post('auth/logout'); 
+            await axios.post('auth/logout');
             clearAuthHeader();
         } catch (error) {
             return thunkAPI.rejectWithValue(error.message);
@@ -66,7 +73,7 @@ export const refreshUser = createAsyncThunk(
         const token = thunkAPI.getState().auth.token;
 
         if (token === null) {
-            return thunkAPI.rejectWithValue({ status: 401, message: 'No token found'});
+            return thunkAPI.rejectWithValue({ status: 401, message: 'No token found' });
         }
         setAuthHeader(token);
         try {
