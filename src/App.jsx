@@ -1,11 +1,6 @@
 import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
-<<<<<<< HEAD
-
-||||||| 4851da8
-=======
 import { Toaster } from "react-hot-toast";
->>>>>>> main
 import RestrictedRoute from "./components/RestrictedRoute";
 import PrivateRoute from "./components/PrivateRoute";
 

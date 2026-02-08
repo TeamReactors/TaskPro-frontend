@@ -1,4 +1,4 @@
-import { Formik, Field, Form,ErrorMessage } from "formik";
+import { Formik, Field, Form, ErrorMessage } from "formik";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
@@ -6,8 +6,6 @@ import { login } from "../redux/auth/operations";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
-import { useDispatch } from "react-redux";
-import { login } from '../redux/auth/operations.js'
 
 const LoginForm = () => {
 
@@ -21,16 +19,16 @@ const LoginForm = () => {
     dispatch(login(values))
       .unwrap()
       .then(() => {
-        toast.success("Successfully login!",{duration:2000});
-        navigate("/task",{replace:true})
+        toast.success("Successfully login!", { duration: 2000 });
+        navigate("/home", { replace: true })
       })
       .catch(e => {
         if (e === "Request failed with status code 404") {
-          toast.error("User with this email does not exist",{duration:2000})
-        } else if(e === "Request failed with status code 401") {
-          toast.error("Incorrect password",{duration:2000})
+          toast.error("User with this email does not exist", { duration: 2000 })
+        } else if (e === "Request failed with status code 401") {
+          toast.error("Incorrect password", { duration: 2000 })
         }
-    })
+      })
 
     actions.resetForm();
   };

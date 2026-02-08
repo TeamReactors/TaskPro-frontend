@@ -3,10 +3,12 @@ import { IoAddOutline } from "react-icons/io5";
 
 
 
-const ScreensPage = () => {
+const ScreensPage = ({
+    board
+}) => {
     return <div className="flex-auto overflow-auto  border-solid  p-6 pt-2.5 bg-black text-white">
         <div id="headerDasboard" className="flex justify-between items-center mb-2.5">
-            <h2 className="font-medium text-white text-xl font-sans">Project Office</h2>
+            <h2 className="font-medium text-white text-xl font-sans">Project Office  | {board}</h2>
             <div className="flex gap-2 items-center cursor-pointer w-auto">
                 <CiFilter className="text-2xl" />
                 <button className="px-[14px] py-[6px] rounded-lg bg-transparent cursor-pointer">Filter</button>
