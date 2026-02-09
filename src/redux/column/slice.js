@@ -18,10 +18,11 @@ const columnSlice = createSlice({
             })
             .addCase(deleteColumn.fulfilled, (state, action) => {
                 state.items = state.items.filter(
-                    (column) => column.id !== action.payload.id
+                    (column) => column.id !== action.payload
                 );
             })
             .addCase(updateColumn.fulfilled, (state, action) => {
+                console.log(action.payload);
                 const index = state.items.findIndex(
                     (column) => column.id === action.payload.id
                 );
