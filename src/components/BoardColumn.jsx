@@ -1,30 +1,62 @@
-import { useSelector } from "react-redux";
-// Reducer Selectors
-import { selectTask } from '../redux/task/selectors';
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import Modal from "react-modal";
+// Icons
+import { GoPencil } from "react-icons/go";
+import { FiTrash } from "react-icons/fi";
 
-const BoardColumn = ({ data }) => {
+// Components
+import EditColumnModalForm from "./EditColumnModalForm";
 
-    const { column } = data;
-    console.log(data)
-    const tasks = useSelector(selectTask);
-    console.log(column.title, "=>  ", tasks);
+// Reducer Operations
+import { deleteColumn } from "../redux/column/operations";
+
+const customStyles = {
+    overlay: {
+        backgroundColor: "rgba(0,0,0,0.65)",
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 1000,
+        backdropFilter: "blur(3px)",
+        WebkitBackdropFilter: "blur(3px)",
+    },
+    content: {
+        border: "none",
+        background: "transparent",
+        inset: 0,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 0,
+    },
+};
+
+const BoardColumn = ({ data: column }) => {
+    const dispatch = useDispatch();
+
+    const handleDelete = (columnId) => {
+        dispatch(deleteColumn(String(columnId)));
+    }
+
+    const [editModalIsOpen, setEditModalIsOpen] = useState(false);
+
     return (
-        <section className="flex flex-col gap-3.5" >
-            <header className="board-column__header">
+        <>
+            <Modal isOpen={editModalIsOpen} onRequestClose={() => setEditModalIsOpen(false)} style={customStyles}>
+                <EditColumnModalForm column={column} columnID={column.id} onClose={() => setEditModalIsOpen(false)} />
+            </Modal>
+
+            <div className="flex w-full px-5 gap-28 py-4.5 rounded-lg justify-between p size-max bg-[#121212] hover:bg-[#121212be]">
                 <h3 className="text-white">{column.title}</h3>
-            </header>
-            <div className="board-column__body">
-                {
-                    tasks.filter(task => task.column_id === column.id).map((task) => (
-                        <div key={task.id} className="board-column__task">
-                            <p>{task.title}</p>
-                            <br />
-                            <p>{task.description}</p>
-                        </div>
-                    ))
-                }
+                <div className="flex items-center gap-2">
+                    <GoPencil className="text-white cursor-pointer hover:text-gray-400" onClick={() => setEditModalIsOpen(true)} />
+                    <FiTrash className="text-white cursor-pointer hover:text-gray-400" onClick={() => handleDelete(column.id)} />
+                </div>
             </div>
-        </section>
+        </>
     );
 };
 
