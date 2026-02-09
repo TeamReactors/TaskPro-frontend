@@ -14,14 +14,11 @@ const clearAuthHeader = () => {
 
 export const register = createAsyncThunk('auth/register', async (credentials, thunkAPI) => {
     try {
-        toast.loading("Registering...", { id: "register" });
         const { data: res } = await axios.post('auth/register', credentials);
         const payload = res.data; // { user, accessToken }
         if (payload?.accessToken) setAuthHeader(payload.accessToken);
-        toast.dismiss("register");
         return payload;
     } catch (error) {
-        toast.dismiss("register");
         return thunkAPI.rejectWithValue(error.message);
     }
 });
@@ -30,14 +27,11 @@ export const login = createAsyncThunk(
     'auth/login',
     async (credentials, thunkAPI) => {
         try {
-            toast.loading("Logging in...", { id: "login" });
             const { data: res } = await axios.post('auth/login', credentials);
             const payload = res.data; // { user, accessToken }
             if (payload?.accessToken) setAuthHeader(payload.accessToken);
-            toast.dismiss("login");
             return payload;
         } catch (error) {
-            toast.dismiss("login");
             return thunkAPI.rejectWithValue(error.message);
         }
     },
