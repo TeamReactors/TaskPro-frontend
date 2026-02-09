@@ -1,4 +1,7 @@
-const HeaderDashbaord = () => {
+// Icons
+import { CiFilter } from "react-icons/ci";
+
+const HeaderDashbaord = ({ board }) => {
     return (
         <div id="headerDasboard" className="flex justify-between items-center mb-2.5">
             <h2 className="font-medium text-white text-xl font-sans">Project Office</h2>
