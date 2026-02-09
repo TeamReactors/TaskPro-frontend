@@ -1,30 +1,45 @@
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 // Components
-import ScreensPage from "../components/ScreensPage";
+import HeaderDashbaord from "../components/HeaderDashboard";
+import MainDashboard from "../components/MainDashboard";
+
 
 // Reducer Operations
-import { fetchBoard } from "../redux/board/operations";
+import { fetchColumns } from '../redux/column/operations';
+import { fetchTask } from '../redux/task/operations';
 
-const HomePage = () => {
+// Reducer Selectors
+import { selectBoardItems } from '../redux/board/selectors';
+import { selectColumn } from '../redux/column/selectors';
+import { selectTask } from '../redux/task/selectors';
+
+const ScreensPage = () => {
+    const { boardID: board } = useParams();
     const dispatch = useDispatch();
-    const { boardID } = useParams();
 
     useEffect(() => {
-        dispatch(fetchBoard());
-    }, [dispatch]);
-    
-    return (
-        <div className="flex h-[100vh] flex-col border-2  ">
-            {/* <Header /> */}
-            <div className="flex flex-3/12">
-                {/* <Sidebar /> */}
-                <ScreensPage board={boardID} />
-            </div>
-        </div>
-    )
-};
+        if (board) {
+            dispatch(fetchColumns(board));
+            dispatch(fetchTask({ board_id: board }));
+        }
+    }, [dispatch, board]);
 
-export default HomePage;
+    const boards = useSelector(selectBoardItems);
+    const columns = useSelector(selectColumn);
+    const tasks = useSelector(selectTask);
+
+    const currentBoard = boards.find((b) => b.id === Number(board));
+    const currentBoardWithColumns = columns.filter((c) => c.board_id === Number(board));
+    const currentBoardWithTasks = tasks.filter((t) => t.board_id === Number(board));
+
+    return <div className="flex-auto overflow-auto p-6 pt-2.5 bg-[#1F1F1F]">
+        <HeaderDashbaord data={{ board: currentBoard }} />
+        <MainDashboard data={{ board: currentBoard, column: currentBoardWithColumns, task: currentBoardWithTasks }} />
+    </div>;
+}
+
+export default ScreensPage;
+
