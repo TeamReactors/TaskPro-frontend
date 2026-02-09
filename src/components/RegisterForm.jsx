@@ -11,18 +11,17 @@ const RegisterForm = () => {
   const navigate = useNavigate();
 
   const handleSubmit = (values, actions) => {
-    console.log(values);
 
     dispatch(register(values))
       .unwrap()
       .then(() => {
-        toast.success("Successfully register!",{duration:2000});
+        toast.success("Successfully register!", { duration: 2000 });
         navigate("/task", { replace: true });
-        
+
       })
       .catch((e) => {
         if (e === "Request failed with status code 409") {
-          toast.error("User with this email already exists",{duration:2000});
+          toast.error("User with this email already exists", { duration: 2000 });
         }
       });
     actions.resetForm();

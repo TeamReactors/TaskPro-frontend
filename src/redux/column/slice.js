@@ -22,7 +22,6 @@ const columnSlice = createSlice({
                 );
             })
             .addCase(updateColumn.fulfilled, (state, action) => {
-                console.log(action.payload);
                 const index = state.items.findIndex(
                     (column) => column.id === action.payload.id
                 );
