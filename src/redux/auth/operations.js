@@ -11,6 +11,71 @@ const clearAuthHeader = () => {
     axios.defaults.headers.common.Authorization = '';
 };
 
+// Axios interceptor
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error, token = null) => {
+    failedQueue.forEach(prom => {
+        if (error) {
+            prom.reject(error);
+        } else {
+            prom.resolve(token);
+        }
+    });
+    failedQueue = [];
+};
+
+axios.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+        const originalRequest = error.config;
+        const isRefreshEndpoint = originalRequest.url?.includes('auth/refresh') || 
+                                   originalRequest.url === 'auth/refresh';
+        
+        if (error.response?.status === 401 && !originalRequest._retry && !isRefreshEndpoint) {
+            if (isRefreshing) {
+                return new Promise((resolve, reject) => {
+                    failedQueue.push({ resolve, reject });
+                })
+                    .then(token => {
+                        originalRequest.headers.Authorization = `Bearer ${token}`;
+                        return axios(originalRequest);
+                    })
+                    .catch(err => {
+                        return Promise.reject(err);
+                    });
+            }
+
+            originalRequest._retry = true;
+            isRefreshing = true;
+
+            try {
+                const { data: res } = await axios.post('auth/refresh');
+                const newAccessToken = res.data?.accessToken;
+
+                if (newAccessToken) {
+                    setAuthHeader(newAccessToken);
+                    processQueue(null, newAccessToken);
+                    originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+                    return axios(originalRequest);
+                }
+            } catch (refreshError) {
+                processQueue(refreshError, null);
+                clearAuthHeader();
+                if (window.location.pathname !== '/auth/login') {
+                    window.location.href = '/auth/login';
+                }
+                return Promise.reject(refreshError);
+            } finally {
+                isRefreshing = false;
+            }
+        }
+
+        return Promise.reject(error);
+    }
+);
+
 export const register = createAsyncThunk('auth/register', async (credentials, thunkAPI) => {
     try {
         const { data: res } = await axios.post('auth/register', credentials);
@@ -74,7 +139,8 @@ export const refreshUser = createAsyncThunk(
              setAuthHeader(payload.accessToken);
             return payload;
         } catch (error) {
-            return thunkAPI.rejectWithValue(error.message);
+            clearAuthHeader();
+            return thunkAPI.rejectWithValue(error.response?.data?.message || error.message);
         }
     },
 );
