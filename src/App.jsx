@@ -10,8 +10,9 @@ import PrivateRoute from "./components/PrivateRoute";
 import Modal from "react-modal";
 import EditColumnModalForm from "./components/EditColumnModalForm";
 import NeedHelpForm from "./components/NeedHelpForm";
+import { useDispatch, useSelector } from "react-redux";
 import { refreshUser } from "./redux/auth/operations";
-import { selectIsRefreshing, selectIsLoggedIn } from "./redux/auth/selectors";
+import { selectIsRefreshing } from "./redux/auth/selectors";
 
 
 const AuthPage = lazy(() => import("./pages/AuthPage"));
@@ -23,19 +24,20 @@ const ScreensPage = lazy(() => import("./pages/ScreensPage"));
 Modal.setAppElement("#root");
 
 function App() {
+
   const dispatch = useDispatch();
+
   const isRefreshing = useSelector(selectIsRefreshing);
-  const isLoggedIn = useSelector(selectIsLoggedIn);
 
   useEffect(() => {
-    if (!isRefreshing && !isLoggedIn) {
-      dispatch(refreshUser());
-    }
-  }, [dispatch, isRefreshing, isLoggedIn]);
+    dispatch(refreshUser());
+  },[dispatch])
 
-  return (
+  return isRefreshing ? (
+    <p className="text-[#888888] w-3/7 text-center text-xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">Loading...</p>
+    
+  ) :(
     <>
-      <NeedHelpForm></NeedHelpForm>
       <Suspense>
         <Routes>
           <Route path="/welcome" element={<WelcomePage />} />
@@ -59,10 +61,14 @@ function App() {
 
 
 
-          <Route element={<HomePage />} >
+          <Route path="/home" element={<PrivateRoute redirectTo="/welcome" component={<HomePage />} />}>
+            <Route path=":boardID" element={<PrivateRoute redirectTo="/welcome" component={<ScreensPage />} />} />
+          </Route>
+
+          {/* <Route element={<HomePage />} >
             <Route path="/home" element={<ScreensPage />} />
             <Route path="/home/:boardID" element={<ScreensPage />} />
-          </Route>
+          </Route> */}
 
         </Routes>
       </Suspense>

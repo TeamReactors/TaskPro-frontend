@@ -35,7 +35,7 @@ const ScreensPage = () => {
     const currentBoardWithColumns = columns.filter((c) => c.board_id === Number(board));
     const currentBoardWithTasks = tasks.filter((t) => t.board_id === Number(board));
 
-    return <div className="flex-auto overflow-auto p-6 pt-2.5 bg-[#1F1F1F]">
+    return <div className="flex-auto overflow-auto p-6 pt-2.5">
         <HeaderDashbaord data={{ board: currentBoard }} />
         <MainDashboard data={{ board: currentBoard, column: currentBoardWithColumns, task: currentBoardWithTasks }} />
     </div>;

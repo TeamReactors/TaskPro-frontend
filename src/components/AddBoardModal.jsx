@@ -1,42 +1,34 @@
-import { Formik, Field, Form, ErrorMessage } from "formik";
-import * as Yup from "yup";
 import { useDispatch } from "react-redux";
-// Reducer Operations
-import { updateColumn } from "../redux/column/operations";
+import { addBoard } from "../redux/board/operations";
+import { Formik, Field, Form, ErrorMessage } from "formik";
 
-
-const EditColumnModalForm = ({ onClose, columnID,column }) => {
+const AddBoard = ({setModalIsOpen}) => {
   const dispatch = useDispatch();
 
   const handleSubmit = (values, actions) => {
-
-    dispatch(
-      updateColumn({ id: String(columnID), title: values.title })
-    );
-    onClose();
+      dispatch(addBoard(values));
+      
     actions.resetForm();
   };
 
-  const EditColumnSchema = Yup.object().shape({
-    title: Yup.string().required("Required"),
-  });
   return (
     <div>
       <Formik
         initialValues={{
           title: "",
+          icon: "",
+          image:""
         }}
-        validationSchema={EditColumnSchema}
         onSubmit={handleSubmit}
       >
         <Form className="flex flex-col bg-[#151515] w-87.5 m-auto p-10 space-y-5 rounded-lg relative">
-          <h1 className="text-white">Edit column</h1>
+          <h1 className="text-white">New Board</h1>
           <img
-            src="../../public/x-close.svg"
+            src="../../x-close.svg"
             className="absolute right-5 top-5"
             width={18}
             height={18}
-            onClick={onClose}
+            onClick={()=> setModalIsOpen(false)}
             alt=""
           />
           <Field
@@ -44,18 +36,23 @@ const EditColumnModalForm = ({ onClose, columnID,column }) => {
             name="title"
             type="text"
             placeholder="Title"
-            value={column.title}
           />
           <ErrorMessage
             name="title"
             component="span"
             className="text-red-500 text-sm"
           />
+          <h4>Icons</h4>
+          <label >
+              <Field  type="radio" name="icon" value="Van" />
+              <img src="../../../bi_grid-1x2.svg" alt="" />
+              Van
+            </label>
           <button
-            className="bg-[#BEDBB0] w-full  py-3.5 px-33.75 rounded-lg text-sm "
+            className="bg-[#BEDBB0] w-full py-3.5 px-33.75 rounded-lg text-sm"
             type="submit"
           >
-            Edit
+            Create
           </button>
         </Form>
       </Formik>
@@ -63,4 +60,4 @@ const EditColumnModalForm = ({ onClose, columnID,column }) => {
   );
 };
 
-export default EditColumnModalForm;
+export default AddBoard;
