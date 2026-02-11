@@ -16,7 +16,7 @@ const RegisterForm = () => {
       .unwrap()
       .then(() => {
         toast.success("Successfully register!", { duration: 2000 });
-        navigate("/task", { replace: true });
+        navigate("/home", { replace: true });
 
       })
       .catch((e) => {

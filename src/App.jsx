@@ -24,7 +24,7 @@ Modal.setAppElement("#root");
 
 function RootRedirect() {
   const isLoggedIn = useSelector(selectIsLoggedIn);
-  return <Navigate to={isLoggedIn ? "/home" : "/auth/login"} replace />;
+  return <Navigate to={isLoggedIn ? "/home" : "/welcome"} replace />;
 }
 
 function App() {
@@ -67,7 +67,8 @@ function App() {
 
 
           <Route path="/home" element={<PrivateRoute redirectTo="/welcome" component={<HomePage />} />}>
-            <Route path=":boardID" element={<PrivateRoute redirectTo="/welcome" component={<ScreensPage />} />} />
+            <Route index element={<ScreensPage />} />
+            <Route path=":boardID" element={<ScreensPage />} />
           </Route>
 
           {/* <Route element={<HomePage />} >
