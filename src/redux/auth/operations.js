@@ -4,8 +4,8 @@ import axios from 'axios';
 
 axios.defaults.baseURL = 'https://taskpro-backend-yofv.onrender.com/';
 axios.defaults.withCredentials = true;
-const setAuthHeader = (token) => {
-    axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+export const setAuthHeader = (token) => {
+    axios.defaults.headers.common.Authorization = token ? `Bearer ${token}` : '';
 }
 const clearAuthHeader = () => {
     axios.defaults.headers.common.Authorization = '';

@@ -10,8 +10,8 @@ import PrivateRoute from "./components/PrivateRoute";
 import Modal from "react-modal";
 import EditColumnModalForm from "./components/EditColumnModalForm";
 import NeedHelpForm from "./components/NeedHelpForm";
-import { refreshUser } from "./redux/auth/operations";
-import { selectIsRefreshing, selectIsLoggedIn } from "./redux/auth/selectors";
+import { refreshUser, setAuthHeader } from "./redux/auth/operations";
+import { selectIsRefreshing, selectIsLoggedIn, selectToken } from "./redux/auth/selectors";
 
 
 const AuthPage = lazy(() => import("./pages/AuthPage"));
@@ -28,14 +28,18 @@ function RootRedirect() {
 }
 
 function App() {
-
   const dispatch = useDispatch();
-
   const isRefreshing = useSelector(selectIsRefreshing);
+  const token = useSelector(selectToken);
+
+  // Persist'ten gelen token'ı header'a yaz (F5 sonrası istekler için)
+  useEffect(() => {
+    if (token) setAuthHeader(token);
+  }, [token]);
 
   useEffect(() => {
     dispatch(refreshUser());
-  },[dispatch])
+  }, [dispatch]);
 
   return isRefreshing ? (
     <p className="text-[#888888] w-3/7 text-center text-xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">Loading...</p>
