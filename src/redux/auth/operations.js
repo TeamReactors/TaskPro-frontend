@@ -1,7 +1,6 @@
 // auth operations
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import toast from 'react-hot-toast';
 
 axios.defaults.baseURL = 'https://taskpro-backend-yofv.onrender.com/';
 axios.defaults.withCredentials = true;
@@ -69,11 +68,10 @@ export const refreshUser = createAsyncThunk(
         if (token === null) {
             return thunkAPI.rejectWithValue({ status: 401, message: 'No token found' });
         }
-        setAuthHeader(token);
         try {
             const { data: res } = await axios.post('auth/refresh');
             const payload = res.data; // { accessToken }
-            if (payload?.accessToken) setAuthHeader(payload.accessToken);
+             setAuthHeader(payload.accessToken);
             return payload;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.message);
