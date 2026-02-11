@@ -1,6 +1,7 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
 import RestrictedRoute from "./components/RestrictedRoute";
 
 import PrivateRoute from "./components/PrivateRoute";
@@ -9,6 +10,8 @@ import PrivateRoute from "./components/PrivateRoute";
 import Modal from "react-modal";
 import EditColumnModalForm from "./components/EditColumnModalForm";
 import NeedHelpForm from "./components/NeedHelpForm";
+import { refreshUser } from "./redux/auth/operations";
+import { selectIsRefreshing, selectIsLoggedIn } from "./redux/auth/selectors";
 
 
 const AuthPage = lazy(() => import("./pages/AuthPage"));
@@ -20,7 +23,15 @@ const ScreensPage = lazy(() => import("./pages/ScreensPage"));
 Modal.setAppElement("#root");
 
 function App() {
+  const dispatch = useDispatch();
+  const isRefreshing = useSelector(selectIsRefreshing);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
 
+  useEffect(() => {
+    if (!isRefreshing && !isLoggedIn) {
+      dispatch(refreshUser());
+    }
+  }, [dispatch, isRefreshing, isLoggedIn]);
 
   return (
     <>
