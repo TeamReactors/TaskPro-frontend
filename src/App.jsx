@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import RestrictedRoute from "./components/RestrictedRoute";
@@ -10,9 +10,8 @@ import PrivateRoute from "./components/PrivateRoute";
 import Modal from "react-modal";
 import EditColumnModalForm from "./components/EditColumnModalForm";
 import NeedHelpForm from "./components/NeedHelpForm";
-import { useDispatch, useSelector } from "react-redux";
 import { refreshUser } from "./redux/auth/operations";
-import { selectIsRefreshing } from "./redux/auth/selectors";
+import { selectIsRefreshing, selectIsLoggedIn } from "./redux/auth/selectors";
 
 
 const AuthPage = lazy(() => import("./pages/AuthPage"));
@@ -22,6 +21,11 @@ const HomePage = lazy(() => import("./pages/HomePage"));
 const ScreensPage = lazy(() => import("./pages/ScreensPage"));
 
 Modal.setAppElement("#root");
+
+function RootRedirect() {
+  const isLoggedIn = useSelector(selectIsLoggedIn);
+  return <Navigate to={isLoggedIn ? "/home" : "/auth/login"} replace />;
+}
 
 function App() {
 
@@ -40,6 +44,7 @@ function App() {
     <>
       <Suspense>
         <Routes>
+          <Route path="/" element={<RootRedirect />} />
           <Route path="/welcome" element={<WelcomePage />} />
 
           {/* <Route
