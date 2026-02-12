@@ -63,8 +63,8 @@ axios.interceptors.response.use(
             } catch (refreshError) {
                 processQueue(refreshError, null);
                 clearAuthHeader();
-                if (window.location.pathname !== '/auth/login') {
-                    window.location.href = '/auth/login';
+                if (typeof window !== 'undefined' && window.location.pathname !== '/welcome') {
+                    window.location.href = '/welcome';
                 }
                 return Promise.reject(refreshError);
             } finally {

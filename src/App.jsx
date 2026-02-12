@@ -24,6 +24,12 @@ Modal.setAppElement("#root");
 
 function RootRedirect() {
   const isLoggedIn = useSelector(selectIsLoggedIn);
+  const isRefreshing = useSelector(selectIsRefreshing);
+  
+  if (isRefreshing) {
+    return null;
+  }
+  
   return <Navigate to={isLoggedIn ? "/home" : "/welcome"} replace />;
 }
 
