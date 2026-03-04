@@ -13,6 +13,7 @@ import { TbPencil } from "react-icons/tb";
 import { LuTrash } from "react-icons/lu";
 import { IoAdd } from "react-icons/io5";
 import { FaRegCircleQuestion } from "react-icons/fa6";
+import { TbLogout } from "react-icons/tb";
 
 const customStyles = {
     overlay: {
@@ -52,7 +53,7 @@ const Sidebar = () => {
         dispatch(logout());
     }
     return (
-        <div className="w-65 flex flex-col gap-10 border-solid border-gray-300 bg-[#121212]">
+        <div className="max-w-65 flex flex-col gap-10 border-solid border-gray-300 bg-[#121212]">
             {/* <img className="mt-5 mb-3 ml-2" src={logo} width={104} height={32} alt="logo" /> */}
             <div className="w-full flex flex-col px-6 mt-10">
                 <p className="text-sm text-[#888888] mt-5 mb-3 ">
@@ -70,7 +71,7 @@ const Sidebar = () => {
                 <hr className="w-full border-gray-700" />
 
             </div>
-            <ul className="w-full d-flex flex-col ">
+            <ul className="w-full d-flex flex-col flex-1">
                 {
                     boards.map((board) => (
                         console.log(activeBoard, board.id),
@@ -93,21 +94,27 @@ const Sidebar = () => {
                 }
             </ul>
 
-            <div className="w-full flex flex-col gap-3.5 bg-[#1F1F1F] p-5">
-                <img src={needHelpLogo} />
+            <div className="w-full h-auto p-6 flex flex-col gap-6">
+                <div className="flex flex-col gap-3.5 bg-[#1F1F1F] rounded-lg p-5">
+                    <img src={needHelpLogo} className="size-15" />
 
-                <p className="text-white text-sm">
-                    If you need help with <span className="text-[#BEDBB0]">
-                        TaskPro
-                    </span>, check out our support resources or reach out to our customer support team.
-                </p>
+                    <p className="text-white text-sm">
+                        If you need help with <span className="text-[#BEDBB0]">
+                            TaskPro
+                        </span>, check out our support resources or reach out to our customer support team.
+                    </p>
 
-                <p className="text-white text-sm">
-                    <FaRegCircleQuestion /> Need help?
-                </p>
+                    <p className="text-white text-sm flex items-center gap-2">
+                        <FaRegCircleQuestion className="size-5" /> Need help?
+                    </p>
+                </div>
+                <button onClick={handleClick} className="flex items-center gap-2 py-2 px-2.5 text-white hover:text-[#BEDBB0] cursor-pointer ">
+                    <TbLogout className="size-8 text-[#BEDBB0]" />
+                    <span className="text-sm">Log Out</span>
+                </button>
             </div>
 
-            <button onClick={handleClick}>Log Out</button>
+
 
             <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)} style={customStyles}>
                 <AddBoard setModalIsOpen={setModalIsOpen} />

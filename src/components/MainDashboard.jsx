@@ -7,6 +7,7 @@ import BoardTask from './BoardTask';
 // Icons
 import { IoAddOutline } from "react-icons/io5";
 import { Link } from 'react-router-dom';
+import AddBoard from './AddBoardModal';
 
 const customStyles = {
     overlay: {
@@ -36,18 +37,21 @@ const MainDashboard = ({ data }) => {
     const { board, column, task } = data;
 
     const [addColumnModalIsOpen, setAddColumnModalIsOpen] = useState(false);
-
+    const [modalIsOpen, setModalIsOpen] = useState(false);
     return (
         <>
             <Modal isOpen={addColumnModalIsOpen} onRequestClose={() => setAddColumnModalIsOpen(false)} style={customStyles} >
                 <AddColumnModalForm onClose={() => setAddColumnModalIsOpen(false)} boardID={board ? board.id : null} />
+            </Modal>
+            <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)} style={customStyles}>
+                <AddBoard setModalIsOpen={setModalIsOpen} />
             </Modal>
             <div className=" overflow-x-auto">
                 {
                     !board ? (
                         <div className="flex items-center justify-center h-[calc(100vh-200px)]">
                             <p className="text-[#888888] w-3/7 text-center text-xl">
-                                Before starting your project, it is essential <Link to={"#"} className='text-[#BEDBB0] '>to create a board</Link> to visualize and track all the necessary tasks and milestones. This board serves as a powerful tool to organize the workflow and ensure effective collaboration among team members.
+                                Before starting your project, it is essential <Link to={"#"} onClick={() => setModalIsOpen(true)} className='text-[#BEDBB0] '>to create a board</Link> to visualize and track all the necessary tasks and milestones. This board serves as a powerful tool to organize the workflow and ensure effective collaboration among team members.
                             </p>
                         </div>
                     ) : (
